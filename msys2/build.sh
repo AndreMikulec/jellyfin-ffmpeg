@@ -141,11 +141,11 @@ cd "$BUILDER_ROOT"
 mkdir -p                                                                         artifacts2
 if [ $(ls ../*.exe > /dev/null 2>&1 && echo 0) ]; then cp    ../*.exe            artifacts2/; fi
 if [ $(ls ../*.dll > /dev/null 2>&1 && echo 0) ]; then cp    ../*.dll            artifacts2/; fi
-#                           also copy the directory itself "BUILD" (with the contents)
-if [ -d "BUILD" ];                                then cp -R BUILD               artifacts2/; fi
-if [ -d "${FFBUILD_PREFIX}" ];                    then mkdir -p                  artifacts2${FFBUILD_PREFIX}; fi
+#                            also copy the directory itself "PKGBUILD" (with the contents)
+if [ -d "PKGBUILD" ];                             then cp -R PKGBUILD            artifacts2/; fi
+if [ -d "${FFBUILD_PREFIX}" ];                    then mkdir -p                  artifacts2${FFBUILD_PREFIX}  ; fi
 #                                copy the contents
-if [ -d "${FFBUILD_PREFIX}" ];                    then cp -R ${FFBUILD_PREFIX}/. artifacts2${FFBUILD_PREFIX}/; fi
+if [ -d "${FFBUILD_PREFIX}" ];                    then cp -R ${FFBUILD_PREFIX}/. artifacts2${FFBUILD_PREFIX}/ ; fi
 pushd                                                                            artifacts2
 zip -9 -r "${ARTIFACTS_PATH2}/${OUTPUT_FNAME2}"                                  .
 popd                                                                      # from artifacts2
