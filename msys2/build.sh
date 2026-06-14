@@ -1,5 +1,8 @@
 #!/bin/bash
-set -xe
+set -x -v -e
+# Andre addded the single line above
+# Andre commented out the single line below
+# set -xe
 cd "$(dirname "$0")"
 export BUILDER_ROOT="$(pwd)"
 export FFBUILD_PREFIX="/clang64/ffbuild"
@@ -112,8 +115,14 @@ while IFS= read -r line; do
 done < "$BUILDER_ROOT"/../debian/changelog
 
 PKG_NAME="jellyfin-ffmpeg_${PKG_VER}_portable_${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}"
+# Andre added the one line ...
+PKG_NAME2="jellyfin-ffmpeg_${PKG_VER}_shared_portable_${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}"
 ARTIFACTS_PATH="$BUILDER_ROOT"/artifacts
+# Andre added the one line ...
+ARTIFACTS_PATH2="$BUILDER_ROOT"/artifacts2
 OUTPUT_FNAME="${PKG_NAME}.zip"
+# Andre added the one line ...
+OUTPUT_FNAME2="${PKG_NAME2}-shared.zip"
 cd "$BUILDER_ROOT"
 mkdir -p artifacts
 mv ../ffmpeg.exe ./
@@ -121,7 +130,18 @@ mv ../ffprobe.exe ./
 zip -9 -r "${ARTIFACTS_PATH}/${OUTPUT_FNAME}" ffmpeg.exe ffprobe.exe
 cd "$BUILDER_ROOT"/..
 
+# Andre added the code section ...
+cd "$BUILDER_ROOT"
+mkdir -p artifacts2
+cp - R ${FFBUILD_PREFIX}/.                       artifacts2/
+pushd                                            artifacts2
+zip -9 -r "${ARTIFACTS_PATH2}/${OUTPUT_FNAME2}"  *
+popd                                      # from artifacts2
+cd "$BUILDER_ROOT"/..
+
 if [[ -n "$GITHUB_ACTIONS" ]]; then
     echo "build_name=${BUILD_NAME}" >> "$GITHUB_OUTPUT"
     echo "${OUTPUT_FNAME}" > "${ARTIFACTS_PATH}/${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}.txt"
+    # Andre added the single line
+    echo "${OUTPUT_FNAME2}" > "${ARTIFACTS_PATH2}/${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}-shared.txt"
 fi
