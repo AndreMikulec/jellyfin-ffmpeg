@@ -43,10 +43,16 @@ if [[ -f "VERSION" && -f "ffbuild/version.sh" ]]; then
     sed -i "s/cat VERSION/&.bak/g" ffbuild/version.sh
 fi
 
+# Andre changed
+# from
+#   --pkg-config-flags=--static
+# to
+#   --pkg-config-flags=--shared
+#
 PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
     --cc=clang \
     --cxx=clang++ \
-    --pkg-config-flags=--static \
+    --pkg-config-flags=--shared \
     --extra-cflags=-I/clang64/ffbuild/include \
     --extra-ldflags=-L/clang64/ffbuild/lib \
     --prefix=/clang64/ffbuild/jellyfin-ffmpeg \
@@ -132,11 +138,17 @@ cd "$BUILDER_ROOT"/..
 
 # Andre added the code section ...
 cd "$BUILDER_ROOT"
-mkdir -p artifacts2
-cp - R ${FFBUILD_PREFIX}/.                       artifacts2/
-pushd                                            artifacts2
-zip -9 -r "${ARTIFACTS_PATH2}/${OUTPUT_FNAME2}"  *
-popd                                      # from artifacts2
+mkdir -p                                                                         artifacts2
+if [ $(ls ../*.exe > /dev/null 2>&1 && echo 0) ]; then cp    ../*.exe            artifacts2/; fi
+if [ $(ls ../*.dll > /dev/null 2>&1 && echo 0) ]; then cp    ../*.dll            artifacts2/; fi
+#                           also copy the directory itself "BUILD" (with the contents)
+if [ -d "BUILD" ];                                then cp -R BUILD               artifacts2/; fi
+if [ -d "${FFBUILD_PREFIX}" ];                    then mkdir -p                  artifacts2${FFBUILD_PREFIX}; fi
+#                                copy the contents
+if [ -d "${FFBUILD_PREFIX}" ];                    then cp -R ${FFBUILD_PREFIX}/. artifacts2${FFBUILD_PREFIX}/; fi
+pushd                                                                            artifacts2
+zip -9 -r "${ARTIFACTS_PATH2}/${OUTPUT_FNAME2}"                                  .
+popd                                                                      # from artifacts2
 cd "$BUILDER_ROOT"/..
 
 if [[ -n "$GITHUB_ACTIONS" ]]; then
