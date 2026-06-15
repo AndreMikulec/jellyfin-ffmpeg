@@ -81,7 +81,7 @@ jobs:
             mingw-w64-clang-x86_64-libopenmpt
             mingw-w64-clang-x86_64-libtheora
             mingw-w64-clang-x86_64-opencl-headers
-            mingw-w64-svt-av1
+            mingw-w64-clang-x86_64-svt-av1
             mingw-w64-clang-x86_64-x264
             mingw-w64-clang-x86_64-x265
             mingw-w64-clang-x86_64-zimg
@@ -91,8 +91,8 @@ jobs:
             mingw-w64-clang-x86_64-opencl-icd
             mingw-w64-clang-x86_64-shaderc
             mingw-w64-clang-x86_64-spirv-cross
-            mingw-w64-vulkan-headers
-            mingw-w64-vulkan-loader
+            mingw-w64-clang-x86_64-vulkan-headers
+            mingw-w64-clang-x86_64-vulkan-loader
             mingw-w64-clang-x86_64-libplacebo
             mingw-w64-clang-x86_64-spirv-headers
 
