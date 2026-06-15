@@ -136,7 +136,7 @@ mv ../ffprobe.exe ./
 zip -9 -r "${ARTIFACTS_PATH}/${OUTPUT_FNAME}" ffmpeg.exe ffprobe.exe
 cd "$BUILDER_ROOT"/..
 
-# Andre added the code section ...
+# Andre added the code section ... any .dll and .exe (other than ffmpeg.exe ffprob.exe)
 cd "$BUILDER_ROOT"
 mkdir -p                                                                         artifacts2
 if [ $(ls ../*.exe > /dev/null 2>&1 && echo 0) ]; then cp    ../*.exe            artifacts2/; fi

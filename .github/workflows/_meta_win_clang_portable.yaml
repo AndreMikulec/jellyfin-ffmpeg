@@ -53,6 +53,48 @@ jobs:
             quilt
             diffstat
             ${{ matrix.os.nasm }}
+            brotli
+            bzip2
+            libiconv
+            xz
+            zlib
+            libpng
+            fftw
+            freetype
+            fribidi
+            gmp
+            libxml2
+            chromaprint
+            fontconfig
+            harfbuzz
+            lame
+            libbluray
+            libogg
+            libvpx
+            libwebp
+            opus
+            libunibreak
+            libvorbis
+            dav1d
+            fdk-aac-stripped
+            libass
+            libopenmpt
+            libtheora
+            opencl-headers
+            SVT-AV1
+            x264
+            x265
+            zimg
+            amf-headers
+            ffnvcodec-headers
+            libvpl
+            opencl-icd
+            shaderc
+            spirv-cross
+            Vulkan-Headers
+            Vulkan-Shim-Loader
+            libplacebo
+            spirv-headers
 
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
