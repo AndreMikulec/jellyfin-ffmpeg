@@ -52,11 +52,12 @@ fi
 PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
     --cc=clang \
     --cxx=clang++ \
-    --pkg-config-flags=--shared \
+    --pkg-config-flags=--static \
     --extra-cflags=-I/clang64/ffbuild/include \
     --extra-ldflags=-L/clang64/ffbuild/lib \
     --prefix=/clang64/ffbuild/jellyfin-ffmpeg \
     --extra-version=Jellyfin \
+    --enable-shared \
     --disable-unstable \
     --disable-ffplay \
     --disable-debug \
