@@ -109,6 +109,11 @@ PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
     --enable-nvenc
 
 make -j$(nproc) V=1
+# Andre added - trying to get the .h files
+make install
+# Andre added - trying to get the configured,made,installed ffmpeg html documentation
+make install-doc
+
 
 # We have to manually match lines to get version as there will be no dpkg-parsechangelog on msys2
 PKG_VER=0.0.0
@@ -121,23 +126,14 @@ while IFS= read -r line; do
     fi
 done < "$BUILDER_ROOT"/../debian/changelog
 
-PKG_NAME="jellyfin-ffmpeg_${PKG_VER}_portable_${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}"
+# Andre added the code section
+# Doing this early, so that the ffmpeg.exe and ffprobe.exe are not moved(mv) out of the root directory
 # Andre added the one line ...
 PKG_NAME2="jellyfin-ffmpeg_${PKG_VER}_shared_portable_${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}"
-ARTIFACTS_PATH="$BUILDER_ROOT"/artifacts
 # Andre added the one line ...
 ARTIFACTS_PATH2="$BUILDER_ROOT"/artifacts2
-OUTPUT_FNAME="${PKG_NAME}.zip"
 # Andre added the one line ...
 OUTPUT_FNAME2="${PKG_NAME2}-shared.zip"
-cd "$BUILDER_ROOT"
-mkdir -p artifacts
-mv ../ffmpeg.exe ./
-mv ../ffprobe.exe ./
-zip -9 -r "${ARTIFACTS_PATH}/${OUTPUT_FNAME}" ffmpeg.exe ffprobe.exe
-cd "$BUILDER_ROOT"/..
-
-# Andre added the code section ... any .dll and .exe (other than ffmpeg.exe ffprob.exe)
 cd "$BUILDER_ROOT"
 mkdir -p                                                                         artifacts2
 if [ $(ls ../*.exe > /dev/null 2>&1 && echo 0) ]; then cp    ../*.exe            artifacts2/; fi
@@ -158,3 +154,19 @@ if [[ -n "$GITHUB_ACTIONS" ]]; then
     # Andre added the single line
     echo "${OUTPUT_FNAME2}" > "${ARTIFACTS_PATH2}/${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}-shared.txt"
 fi
+
+
+PKG_NAME="jellyfin-ffmpeg_${PKG_VER}_portable_${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}"
+ARTIFACTS_PATH="$BUILDER_ROOT"/artifacts
+OUTPUT_FNAME="${PKG_NAME}.zip"
+
+cd "$BUILDER_ROOT"
+mkdir -p artifacts
+mv ../ffmpeg.exe ./
+mv ../ffprobe.exe ./
+zip -9 -r "${ARTIFACTS_PATH}/${OUTPUT_FNAME}" ffmpeg.exe ffprobe.exe
+cd "$BUILDER_ROOT"/..
+
+
+
+
