@@ -43,11 +43,8 @@ if [[ -f "VERSION" && -f "ffbuild/version.sh" ]]; then
     sed -i "s/cat VERSION/&.bak/g" ffbuild/version.sh
 fi
 
-# Andre changed
-# from
-#   --pkg-config-flags=--static
-# to
-#   --pkg-config-flags=--shared
+# Andre added
+# --enable-shared
 #
 PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
     --cc=clang \
@@ -109,7 +106,7 @@ PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
     --enable-nvenc
 
 make -j$(nproc) V=1
-# Andre added - trying to get the .h files
+# Andre added - trying to get the .h files and .pc files
 make install
 # Andre added - trying to get the configured,made,installed ffmpeg html documentation
 make install-doc
@@ -135,22 +132,76 @@ ARTIFACTS_PATH2="$BUILDER_ROOT"/artifacts2
 # Andre added the one line ...
 OUTPUT_FNAME2="${PKG_NAME2}-shared.zip"
 cd "$BUILDER_ROOT"
-mkdir -p                                                                         artifacts2
-if [ $(ls ../*.exe > /dev/null 2>&1 && echo 0) ]; then cp    ../*.exe            artifacts2/; fi
-if [ $(ls ../*.dll > /dev/null 2>&1 && echo 0) ]; then cp    ../*.dll            artifacts2/; fi
-#                            also copy the directory itself "PKGBUILD" (with the contents)
-if [ -d "PKGBUILD" ];                             then cp -R PKGBUILD            artifacts2/; fi
-if [ -d "${FFBUILD_PREFIX}" ];                    then mkdir -p                  artifacts2${FFBUILD_PREFIX}  ; fi
-#                                copy the contents
-if [ -d "${FFBUILD_PREFIX}" ];                    then cp -R ${FFBUILD_PREFIX}/. artifacts2${FFBUILD_PREFIX}/ ; fi
-pushd                                                                            artifacts2
-zip -9 -r "${ARTIFACTS_PATH2}/${OUTPUT_FNAME2}"                                  .
-popd                                                                      # from artifacts2
+mkdir -p                                                                           artifacts2
+
+# NOT WHAT I AM LOOKING FOR
+# if [ $(ls ../*.exe > /dev/null 2>&1 && echo 0) ]; then cp    ../*.exe            artifacts2/; fi
+# if [ $(ls ../*.dll > /dev/null 2>&1 && echo 0) ]; then cp    ../*.dll            artifacts2/; fi
+# #                            also copy the directory itself "PKGBUILD" (with the contents)
+# if [ -d "PKGBUILD" ];                             then cp -R PKGBUILD            artifacts2/; fi
+# if [ -d "${FFBUILD_PREFIX}" ];                    then mkdir -p                  artifacts2${FFBUILD_PREFIX}  ; fi
+# #                                copy the contents
+# if [ -d "${FFBUILD_PREFIX}" ];                    then cp -R ${FFBUILD_PREFIX}/. artifacts2${FFBUILD_PREFIX}/ ; fi
+
+# Andre trying to copy out what is useful
+# build (results from "make")
+# make
+# "Files" section at the bottom
+# https://packages.msys2.org/packages/mingw-w64-ucrt-x86_64-ffmpeg
+# structure
+# ffmpeg-n8.1-latest-win64-gpl-shared-8.1.zip
+# https://github.com/BtbN/FFmpeg-Builds/releases
+# old custom build
+# https://github.com/AndreMikulec/jellyfin-ffmpeg/actions/runs/27672539025/job/81840015606
+# old custom build log
+# https://productionresultssa13.blob.core.windows.net/actions-results/af15059e-acd7-4e68-99a8-316a9a3c46cc/workflow-job-run-a259afe4-2ea5-5f56-9c34-14baa0cd6df6/logs/job/job-logs.txt?rsct=text%2Fplain&se=2026-06-18T18%3A25%3A31Z&sig=8LBDsWTWjd7NJ2auvYw1lWfj8VH30%2Fe0YtuVmsd454s%3D&ske=2026-06-18T19%3A49%3A52Z&skoid=ca7593d4-ee42-46cd-af88-8b886a2f84eb&sks=b&skt=2026-06-18T15%3A49%3A52Z&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skv=2025-11-05&sp=r&spr=https&sr=b&st=2026-06-18T18%3A15%3A26Z&sv=2025-11-05
+# Install path PREFIX
+# https://trac.ffmpeg.org/wiki/CompilationGuide/Generic
+
+# Andre added - trying to see the build
+ls -alrt -R ..
+
+# copy from ./configure (above)
+export PREFIX=/clang64/ffbuild/jellyfin-ffmpeg
+
+# Andre trying to see the install
+ls -alrt -R ${PREFIX}
+
+mkdir -p                                                    artifact2/{lib,bin}
+# build ../*[_g].exe # install ${MSYSTEM}/bin                                          
+cp ../*.exe                                                 artifact2/bin
+# build ./*.dll # install ${MSYSTEM}/bin                                               
+cp ../*.dll                                                 artifact2/bin
+mkdir -p                                                    artifact2/share/ffmpeg
+# make install AND install-doc (everything else)
+cp -R ${PREFIX}/share/ffmpeg/.                              artifact2/share/ffmpeg
+# libraries in the for-do-done
+mkdir -p                                                    artifact2/lib/pkgconfig
+mkdir -p artifact2/include/{libavcodec,libavdevice,libavfilter,libavformat,libavutil,libswresample,libswscale}
+#
+for library in              libavcodec libavdevice libavfilter libavformat libavutil libswresample libswscale
+do
+  # build-only .lib .def .dll.objs
+  cp ../${library}/*{.lib,.def}                             artifact2/lib
+  # make install or # build ../${library}/${library}.dll.a
+  cp ${PREFIX}/lib/lib${library}.dll.a                      artifact2/lib
+  # install # not found in the "old custom build log" # not in BtbN .zip
+  cp ${PREFIX}/lib/${library}.a                             artifact2/lib
+  # make install                                            
+  cp ${PREFIX}/lib/pkgconfig/${library}.pc                  artifact2/lib/pkgconfig
+  # make install                                            
+  cp ${PREFIX}/include/${library}/*.h                       artifact2/include/${library}
+done
+
+pushd                                                       artifacts2
+zip -9 -r "${ARTIFACTS_PATH2}/${OUTPUT_FNAME2}"             .
+popd                                                        # from artifacts2
+
 cd "$BUILDER_ROOT"/..
+
 
 if [[ -n "$GITHUB_ACTIONS" ]]; then
     echo "build_name=${BUILD_NAME}" >> "$GITHUB_OUTPUT"
-    echo "${OUTPUT_FNAME}" > "${ARTIFACTS_PATH}/${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}.txt"
     # Andre added the single line
     echo "${OUTPUT_FNAME2}" > "${ARTIFACTS_PATH2}/${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}-shared.txt"
 fi
@@ -167,6 +218,7 @@ mv ../ffprobe.exe ./
 zip -9 -r "${ARTIFACTS_PATH}/${OUTPUT_FNAME}" ffmpeg.exe ffprobe.exe
 cd "$BUILDER_ROOT"/..
 
-
-
-
+if [[ -n "$GITHUB_ACTIONS" ]]; then
+    echo "build_name=${BUILD_NAME}" >> "$GITHUB_OUTPUT"
+    echo "${OUTPUT_FNAME}" > "${ARTIFACTS_PATH}/${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}.txt"
+fi
