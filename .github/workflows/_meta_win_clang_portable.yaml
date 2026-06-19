@@ -70,9 +70,12 @@ jobs:
             quilt
             diffstat
             ${{ matrix.os.nasm }}
-            perl
-            texinfo
-            SDL2
+            mingw-w64-clang-x86_64-perl
+            mingw-w64-clang-x86_64-texinfo
+            mingw-w64-clang-x86_64-SDL2_image
+            mingw-w64-clang-x86_64-SDL2_mixer
+            mingw-w64-clang-x86_64-SDL2_pango
+            mingw-w64-clang-x86_64-SDL2_sound
 
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
