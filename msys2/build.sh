@@ -45,7 +45,11 @@ fi
 
 # Andre added
 # --enable-shared
-#
+# Andre removed - html - requires perl texinfo  - make html
+# --disable-doc
+# Andre removed - requires SDL2
+# --disable-sdl2 \
+# --disable-ffplay \
 PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
     --cc=clang \
     --cxx=clang++ \
@@ -56,10 +60,7 @@ PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
     --extra-version=Jellyfin \
     --enable-shared \
     --disable-unstable \
-    --disable-ffplay \
     --disable-debug \
-    --disable-doc \
-    --disable-sdl2 \
     --enable-lto=thin \
     --enable-gpl \
     --enable-version3 \
@@ -106,9 +107,11 @@ PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
     --enable-nvenc
 
 make -j$(nproc) V=1
-# Andre added - trying to get the .h files and .pc files
+# Andre added
 make install
-# Andre added - trying to get the configured,made,installed ffmpeg html documentation
+# Andre added - require perl texinfo ( do not --disable-doc )
+make html
+# Andre added 
 make install-doc
 
 
@@ -167,31 +170,36 @@ export PREFIX=/clang64/ffbuild/jellyfin-ffmpeg
 # Andre trying to see the install
 ls -alrt -R ${PREFIX}
 
-mkdir -p                                                    artifact2/{lib,bin}
-# build ../*[_g].exe # install ${MSYSTEM}/bin                                          
-cp ../*.exe                                                 artifact2/bin
-# build ./*.dll # install ${MSYSTEM}/bin                                               
-cp ../*.dll                                                 artifact2/bin
-mkdir -p                                                    artifact2/share/ffmpeg
-# make install AND install-doc (everything else)
-cp -R ${PREFIX}/share/ffmpeg/.                              artifact2/share/ffmpeg
-# libraries in the for-do-done
-mkdir -p                                                    artifact2/lib/pkgconfig
-mkdir -p artifact2/include/{libavcodec,libavdevice,libavfilter,libavformat,libavutil,libswresample,libswscale}
-#
-for library in              libavcodec libavdevice libavfilter libavformat libavutil libswresample libswscale
-do
-  # build-only .lib .def .dll.objs
-  cp ../${library}/*{.lib,.def}                             artifact2/lib
-  # make install or # build ../${library}/${library}.dll.a
-  cp ${PREFIX}/lib/lib${library}.dll.a                      artifact2/lib
-  # install # not found in the "old custom build log" # not in BtbN .zip
-  cp ${PREFIX}/lib/${library}.a                             artifact2/lib
-  # make install                                            
-  cp ${PREFIX}/lib/pkgconfig/${library}.pc                  artifact2/lib/pkgconfig
-  # make install                                            
-  cp ${PREFIX}/include/${library}/*.h                       artifact2/include/${library}
-done
+### NEVER TRIED - SHOULD WORK
+# # mkdir -p                                                    artifact2/{lib,bin}
+# # # build ../*[_g].exe # install ${MSYSTEM}/bin                                          
+# # cp ../*.exe                                                 artifact2/bin
+# # # build ./*.dll # install ${MSYSTEM}/bin                                               
+# # cp ../${library}/bin/*.dll                                  artifact2/bin
+# # mkdir -p                                                    artifact2/share/ffmpeg
+# # # make install AND install-doc (everything else)
+# # cp -R ${PREFIX}/share/ffmpeg/.                              artifact2/share/ffmpeg
+# # # libraries in the for-do-done
+# # mkdir -p                                                    artifact2/lib/pkgconfig
+# # mkdir -p artifact2/include/{libavcodec,libavdevice,libavfilter,libavformat,libavutil,libswresample,libswscale}
+# # #
+# # for library in              libavcodec libavdevice libavfilter libavformat libavutil libswresample libswscale
+# # do
+# #   # build-only .lib .def .dll.objs
+# #   cp ../${library}/*{.lib,.def}                             artifact2/lib
+# #   # make install or # build ../${library}/${library}.dll.a
+# #   cp ${PREFIX}/lib/lib${library}.dll.a                      artifact2/lib
+# #   # install # .a not found in the "old shared custom build log" # not in shared BtbN .zip
+# # # .a (static) xor .dll (shared)
+# # # cp ${PREFIX}/lib/${library}.a                             artifact2/lib
+# #   # make install                                            
+# #   cp ${PREFIX}/lib/pkgconfig/${library}.pc                  artifact2/lib/pkgconfig
+# #   # make install                                            
+# #   cp ${PREFIX}/include/${library}/*.h                       artifact2/include/${library}
+# # done
+
+# better
+cp -R ${PREFIX}/{bin,lib,include,shared,doc}                artifacts2
 
 pushd                                                       artifacts2
 zip -9 -r "${ARTIFACTS_PATH2}/${OUTPUT_FNAME2}"             .
