@@ -43,6 +43,12 @@ if [[ -f "VERSION" && -f "ffbuild/version.sh" ]]; then
     sed -i "s/cat VERSION/&.bak/g" ffbuild/version.sh
 fi
 
+
+
+# Andre added
+export PATH=/usr/bin/site_perl:${PATH}
+echo "PATH: ${PATH}"
+
 # Andre added
 # --enable-shared
 # Andre removed - html - requires perl texinfo  - make html
