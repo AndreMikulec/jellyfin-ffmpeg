@@ -112,28 +112,6 @@ jobs:
         shell: msys2 {0}
     steps:
 
-        # # help "msys2/setup-msys2" find
-        #
-        # /usr/bin/site_perl/msguntypot
-        # /usr/bin/site_perl/po4a
-        # /usr/bin/site_perl/po4a-display-man
-        # /usr/bin/site_perl/po4a-display-pod
-        # /usr/bin/site_perl/po4a-gettextize
-        # /usr/bin/site_perl/po4a-normalize
-        # /usr/bin/site_perl/po4a-translate
-        #
-      - name: Add site_perl to GITHUB_PATH
-        shell: bash
-        run: |
-          # Get the exact MSYS2 installation path (translated to a Windows path)
-          MSYS_ROOT=$(cygpath -w /)
-          # Append the site_perl bin folder (using forward slashes/escaped syntax for Windows)
-          # echo "${MSYS_ROOT}\\usr\\bin\\site_perl" >> ${GITHUB_PATH}
-          # echo "${MSYS_ROOT}\usr\\bin\\site_perl" >> ${GITHUB_PATH}
-          # echo "/usr/bin/site_perl" >> ${GITHUB_PATH}
-          echo "${MSYS_ROOT}/usr/bin/site_perl" >> ${GITHUB_PATH}
-          echo MSYS_ROOT: ${MSYS_ROOT}
-          echo GITHUB_PATH: ${GITHUB_PATH}
 
       - uses: msys2/setup-msys2@66cd2cce69caa17b53920067426061ca1de3a884 # v2
         with:
@@ -154,6 +132,16 @@ jobs:
             mingw-w64-clang-x86_64-SDL2_pango
             mingw-w64-clang-x86_64-SDL2_sound
 
+        # # help MSYS2 find
+        #
+        # /usr/bin/site_perl/msguntypot
+        # /usr/bin/site_perl/po4a
+        # /usr/bin/site_perl/po4a-display-man
+        # /usr/bin/site_perl/po4a-display-pod
+        # /usr/bin/site_perl/po4a-gettextize
+        # /usr/bin/site_perl/po4a-normalize
+        # /usr/bin/site_perl/po4a-translate
+        #
       - name: MSYS2 extra
           id: msys2extra
         uses: msys2/setup-msys2@66cd2cce69caa17b53920067426061ca1de3a884 # v2
@@ -163,11 +151,11 @@ jobs:
         env:
           MSYS2_LOCATION: ${{ steps.msys2extra.outputs.msys2-location }}
         run: |
-          echo GITHUB_PATH ...
+          echo "GITHUB_PATH ..."
           cat "${GITHUB_PATH}"
           echo "MSYS2_LOCATION: ${MSYS2_LOCATION}"
           echo "${MSYS2_LOCATION}/usr/bin/site_perl" >> ${GITHUB_PATH}
-          echo GITHUB_PATH ...
+          echo "GITHUB_PATH ..."
           cat "${GITHUB_PATH}"
           pacman -S --noconfirm -needed mingw-w64-clang-x86_64-perl
           pacman -S --noconfirm -needed mingw-w64-clang-x86_64-texinfo
