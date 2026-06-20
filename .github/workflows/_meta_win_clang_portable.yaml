@@ -157,9 +157,9 @@ jobs:
           echo $(cygpath -w "${MSYS2_LOCATION}/usr/bin/site_perl") >> ${GITHUB_PATH}
           echo "GITHUB_PATH ..."
           cat "${GITHUB_PATH}"
-          pacman -S --noconfirm -needed mingw-w64-clang-x86_64-perl
-          pacman -S --noconfirm -needed mingw-w64-clang-x86_64-texinfo
-          pacman -S --noconfirm -needed po4a
+          pacman -S --needed --noconfirm  mingw-w64-clang-x86_64-perl
+          pacman -S --needed --noconfirm  mingw-w64-clang-x86_64-texinfo
+          pacman -S --needed --noconfirm  po4a
 
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
