@@ -59,6 +59,8 @@ jobs:
 #s           nasm: mingw-w64-clang-aarch64-nasm
 #s           build_script: ./msys2/buildarm64.sh
 
+
+
     # OMIT shaderc
     # mingw-w64-clang-x86_64-jellyfin-shaderc-2026.1-1 and mingw-w64-clang-x86_64-shaderc-2026.2-1 are in conflict. Remove mingw-w64-clang-x86_64-shaderc? [Y/n] 
     # error: failed to prepare transaction (could not satisfy dependencies)
@@ -109,6 +111,25 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
+
+        # # help "msys2/setup-msys2" find
+        #
+        # /usr/bin/site_perl/msguntypot
+        # /usr/bin/site_perl/po4a
+        # /usr/bin/site_perl/po4a-display-man
+        # /usr/bin/site_perl/po4a-display-pod
+        # /usr/bin/site_perl/po4a-gettextize
+        # /usr/bin/site_perl/po4a-normalize
+        # /usr/bin/site_perl/po4a-translate
+        #
+      - name: Add site_perl to GITHUB_PATH
+        shell: bash
+        run: |
+          # Get the exact MSYS2 installation path (translated to a Windows path)
+          MSYS_ROOT=$(cygpath -w /)
+          # Append the site_perl bin folder (using forward slashes/escaped syntax for Windows)
+          echo "${MSYS_ROOT"\\usr\\bin\\site_perl" >> ${GITHUB_PATH}
+
       - uses: msys2/setup-msys2@66cd2cce69caa17b53920067426061ca1de3a884 # v2
         with:
           update: true
