@@ -53,6 +53,26 @@ jobs:
     # Andre removed - requires SDL2
     # --disable-sdl2 \
     # --disable-ffplay \
+    #
+    # Andre added
+    # pacman -S po4a
+    # https://packages.msys2.org/search?t=pkg&q=po4a
+    # 
+    # Supported formats
+    # po4a currently supports the following formats:
+    # ...
+    # It extracts the translatable material from the original document, 
+    # and places it into a PO file that is adapted to the translation process. 
+    # docbook DocBook XML
+    # xhtml XHTML documents
+    # dia uncompressed Dia diagrams
+    # guide Gentoo Linux's XML documentation format
+    # wml WML documents
+    # 
+    # po4a/update-po The program 'po4a' was not found.
+    # po4a/update-po Translated man pages were not generated.
+    # Tools for helping translation of documentation
+    # https://www.po4a.org/
     defaults:
       run:
         shell: msys2 {0}
@@ -76,6 +96,7 @@ jobs:
             mingw-w64-clang-x86_64-SDL2_mixer
             mingw-w64-clang-x86_64-SDL2_pango
             mingw-w64-clang-x86_64-SDL2_sound
+            po4a
 
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
