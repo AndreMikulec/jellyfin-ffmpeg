@@ -128,6 +128,7 @@ PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
 make -j$(nproc) V=1
 
 # Andre added
+make doc
 make install
 
 # Andre added 
