@@ -128,7 +128,7 @@ jobs:
           # Get the exact MSYS2 installation path (translated to a Windows path)
           MSYS_ROOT=$(cygpath -w /)
           # Append the site_perl bin folder (using forward slashes/escaped syntax for Windows)
-          echo "${MSYS_ROOT}\\usr\\bin\\site_perl" >> ${GITHUB_PATH}
+          echo "${MSYS_ROOT}\usr\\bin\\site_perl" >> ${GITHUB_PATH}
           echo MSYS_ROOT: ${MSYS_ROOT}
           echo GITHUB_PATH: ${GITHUB_PATH}
 
