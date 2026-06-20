@@ -144,22 +144,22 @@ jobs:
         # /usr/bin/site_perl/po4a-normalize
         # /usr/bin/site_perl/po4a-translate
         #
-      - name: MSYS2 extra
-        id: msys2extra
-        env:
-          msystem: CLANG64
-          MSYS2_LOCATION: ${{ steps.msys2.outputs.msys2-location }}
-        shell: msys2 {0}
-        run: |
-          echo "GITHUB_PATH ..."
-          cat "${GITHUB_PATH}"
-          echo "MSYS2_LOCATION: ${MSYS2_LOCATION}"
-          echo $(cygpath -w "${MSYS2_LOCATION}/usr/bin/site_perl") >> ${GITHUB_PATH}
-          echo "GITHUB_PATH ..."
-          cat "${GITHUB_PATH}"
-          pacman -S --needed --noconfirm  mingw-w64-clang-x86_64-perl
-          pacman -S --needed --noconfirm  mingw-w64-clang-x86_64-texinfo
-          pacman -S --needed --noconfirm  po4a
+#     - name: MSYS2 extra
+#       id: msys2extra
+#       env:
+#         msystem: CLANG64
+#         MSYS2_LOCATION: ${{ steps.msys2.outputs.msys2-location }}
+#       shell: msys2 {0}
+#       run: |
+#         echo "GITHUB_PATH ..."
+#         cat "${GITHUB_PATH}"
+#         echo "MSYS2_LOCATION: ${MSYS2_LOCATION}"
+#         echo $(cygpath -w "${MSYS2_LOCATION}/usr/bin/site_perl") >> ${GITHUB_PATH}
+#         echo "GITHUB_PATH ..."
+#         cat "${GITHUB_PATH}"
+#         pacman -S --needed --noconfirm  mingw-w64-clang-x86_64-perl
+#         pacman -S --needed --noconfirm  mingw-w64-clang-x86_64-texinfo
+#         pacman -S --needed --noconfirm  po4a
 
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 

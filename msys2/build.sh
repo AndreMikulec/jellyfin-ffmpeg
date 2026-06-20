@@ -46,13 +46,14 @@ fi
 
 
 # Andre added
-export PATH=/usr/bin/site_perl:${PATH}
-echo "PATH: ${PATH}"
+
+# export PATH=/usr/bin/site_perl:${PATH}
+# echo "PATH: ${PATH}"
 
 # Andre added
 # --enable-shared
 # Andre removed - html - requires perl texinfo  - make html
-# --disable-doc (ANDRE REMOVED)
+# --disable-doc (KEPT IN PLACE)
 #  keep some documentation but discard the rest
 #  --disable-htmlpages (skips HTML files) - perl and then texinfo(texi2any) NOT DISABLED
 #  --disable-manpages (skips terminal man pages)
@@ -69,9 +70,7 @@ PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
     --extra-ldflags=-L/clang64/ffbuild/lib \
     --prefix=/clang64/ffbuild/jellyfin-ffmpeg \
     --extra-version=Jellyfin \
-    --disable-manpages \
-    --disable-txtpages \
-    --disable-podpages \
+    --disable-doc \
     --enable-shared \
     --disable-unstable \
     --disable-debug \
@@ -134,7 +133,8 @@ PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
 make -j$(nproc) V=1
 
 # Andre added
-make doc
+#make doc
+# Andre added
 make install
 
 # Andre added 
@@ -225,9 +225,12 @@ ls -alrt -R ${PREFIX}
 # # done
 
 # better
-cp                                    -R ${PREFIX}/{bin,lib,include}  artifacts2
-if [ -d "${PREFIX}/share" ]; then cp - R ${PREFIX}/share              artifacts2 ; fi
-if [ -d "${PREFIX}/doc" ];   then cp - R ${PREFIX}/doc                artifacts2 ; fi
+# cp                                    -R ${PREFIX}/{bin,lib,include}  artifacts2
+# if [ -d "${PREFIX}/share" ]; then cp - R ${PREFIX}/share              artifacts2 ; fi
+# if [ -d "${PREFIX}/doc" ];   then cp - R ${PREFIX}/doc                artifacts2 ; fi
+                                         # contents of
+if [ -d "${PREFIX}" ];       then cp - R ${PREFIX}/.                  artifacts2 ; fi
+# just in case
 if [ -d "../doc" ];          then cp - R ../doc                       artifacts2 ; fi
 
 pushd                                                       artifacts2
