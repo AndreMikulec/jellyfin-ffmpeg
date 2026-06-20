@@ -130,7 +130,8 @@ jobs:
           # Append the site_perl bin folder (using forward slashes/escaped syntax for Windows)
           # echo "${MSYS_ROOT}\\usr\\bin\\site_perl" >> ${GITHUB_PATH}
           # echo "${MSYS_ROOT}\usr\\bin\\site_perl" >> ${GITHUB_PATH}
-          echo "/usr/bin/site_perl" >> ${GITHUB_PATH}
+          # echo "/usr/bin/site_perl" >> ${GITHUB_PATH}
+          echo "${MSYS_ROOT}/usr/bin/site_perl" >> ${GITHUB_PATH}
           echo MSYS_ROOT: ${MSYS_ROOT}
           echo GITHUB_PATH: ${GITHUB_PATH}
 
@@ -152,9 +153,25 @@ jobs:
             mingw-w64-clang-x86_64-SDL2_mixer
             mingw-w64-clang-x86_64-SDL2_pango
             mingw-w64-clang-x86_64-SDL2_sound
-            mingw-w64-clang-x86_64-perl
-            mingw-w64-clang-x86_64-texinfo
-            po4a
+
+      - name: MSYS2 extra
+          id: msys2extra
+        uses: msys2/setup-msys2@66cd2cce69caa17b53920067426061ca1de3a884 # v2
+        with:
+          msystem: CLANG64
+      - shell: msys2 {0}
+        env:
+          MSYS2_LOCATION: ${{ steps.msys2extra.outputs.msys2-location }}
+        run: |
+          echo GITHUB_PATH ...
+          cat "${GITHUB_PATH}"
+          echo "MSYS2_LOCATION: ${MSYS2_LOCATION}"
+          echo "${MSYS2_LOCATION}/usr/bin/site_perl" >> ${GITHUB_PATH}
+          echo GITHUB_PATH ...
+          cat "${GITHUB_PATH}"
+          pacman -S --noconfirm -needed mingw-w64-clang-x86_64-perl
+          pacman -S --noconfirm -needed mingw-w64-clang-x86_64-texinfo
+          pacman -S --noconfirm -needed po4a
 
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
