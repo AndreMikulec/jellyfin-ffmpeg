@@ -154,7 +154,7 @@ jobs:
           echo "GITHUB_PATH ..."
           cat "${GITHUB_PATH}"
           echo "MSYS2_LOCATION: ${MSYS2_LOCATION}"
-          echo "${MSYS2_LOCATION}/usr/bin/site_perl" >> ${GITHUB_PATH}
+          echo $(cygpath -w "${MSYS2_LOCATION}/usr/bin/site_perl") >> ${GITHUB_PATH}
           echo "GITHUB_PATH ..."
           cat "${GITHUB_PATH}"
           pacman -S --noconfirm -needed mingw-w64-clang-x86_64-perl
