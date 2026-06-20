@@ -13,7 +13,29 @@ on:
       deploy-key:
         required: false
 
+# Andre added
 jobs:
+# doc:
+#   name: 'Build HTML'
+#   runs-on: ubuntu-latest
+#   steps:
+#     - name: 'Install'
+#       run:
+#         sudo apt install texinfo
+#         
+#     - name: 'Configure'
+#       run: >-
+#         ./configure --disable-everything --disable-programs --disable-postproc 
+#         --disable-avcodec --disable-avdevice --disable-avformat --disable-swscale --disable-swresample  --disable-avfilter
+#
+#     - name: 'Make'
+#       run:
+#         make html
+#         
+#     - name: 'Verify'
+#       run:
+#         if [ -d "doc" ]; ls -alrt -R doc ; fi
+
   build:
     name: 'Build Portable FFmpeg'
     runs-on: ${{ matrix.os.runner }}
@@ -36,7 +58,6 @@ jobs:
 #s           toolchain: mingw-w64-clang-aarch64-toolchain
 #s           nasm: mingw-w64-clang-aarch64-nasm
 #s           build_script: ./msys2/buildarm64.sh
-
 
     # OMIT shaderc
     # mingw-w64-clang-x86_64-jellyfin-shaderc-2026.1-1 and mingw-w64-clang-x86_64-shaderc-2026.2-1 are in conflict. Remove mingw-w64-clang-x86_64-shaderc? [Y/n] 
@@ -74,6 +95,16 @@ jobs:
     # Tools for helping translation of documentation
     # https://www.po4a.org/
     #
+    # If a user doesn't install "texi2html" package prior to ffmpeg compilation, 
+    #  it won't install docs, but there are no warnings during configure process 
+    #    and the default is to build ffmpeg with docs.
+    # FFmpeg will now create and install documentation based on the tools installed on the system
+    #   (so if texi2html is missing, it still will compile and install man pages).
+    # 2012 SEEN JUN 2026
+    # https://trac.ffmpeg.org/ticket/1449
+    #
+    # texi2html is deprecated by GNU and replaced by texi2any (provided by the Texinfo package)
+    
     defaults:
       run:
         shell: msys2 {0}
@@ -91,12 +122,12 @@ jobs:
             quilt
             diffstat
             ${{ matrix.os.nasm }}
-            mingw-w64-clang-x86_64-perl
-            mingw-w64-clang-x86_64-texinfo
             mingw-w64-clang-x86_64-SDL2_image
             mingw-w64-clang-x86_64-SDL2_mixer
             mingw-w64-clang-x86_64-SDL2_pango
             mingw-w64-clang-x86_64-SDL2_sound
+            mingw-w64-clang-x86_64-perl
+            mingw-w64-clang-x86_64-texinfo
 
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 

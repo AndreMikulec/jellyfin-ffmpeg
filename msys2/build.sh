@@ -46,7 +46,12 @@ fi
 # Andre added
 # --enable-shared
 # Andre removed - html - requires perl texinfo  - make html
-# --disable-doc
+# --disable-doc (ANDRE REMOVED)
+#  keep some documentation but discard the rest
+#  --disable-htmlpages (skips HTML files) - perl and then texinfo(texi2any) NOT DISABLED
+#  --disable-manpages (skips terminal man pages)
+#  --disable-podpages (skips Perl POD pages)
+#  --disable-txtpages (skips plain text documentation)
 # Andre removed - requires SDL2
 # --disable-sdl2 \
 # --disable-ffplay \
@@ -58,6 +63,9 @@ PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
     --extra-ldflags=-L/clang64/ffbuild/lib \
     --prefix=/clang64/ffbuild/jellyfin-ffmpeg \
     --extra-version=Jellyfin \
+    --disable-manpages \
+    --disable-txtpages \
+    --disable-podpages \
     --enable-shared \
     --disable-unstable \
     --disable-debug \
@@ -113,9 +121,9 @@ PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
 # HTML files (including the central index manual) will materialize inside 
 #   the doc/ subdirectory of your cloned Git folder.
 # Andre added
-make html
-ls -alrt -R ..
-if [ -d "${PREFIX}" ]; then ls -alrt -R ${PREFIX} ; fi
+# make html
+# ls -alrt -R ..
+# if [ -d "${PREFIX}" ]; then ls -alrt -R ${PREFIX} ; fi
 
 make -j$(nproc) V=1
 
