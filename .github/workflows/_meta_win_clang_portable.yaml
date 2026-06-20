@@ -168,7 +168,13 @@ jobs:
           mkdir /${{ matrix.os.msystem == 'CLANG64' && 'clang64' || 'clangarm64' }}/ffbuild
 
       - name: Build Portable
-        run: ${{ matrix.os.build_script }}
+        # Andre added env
+        env:
+          MSYS2_LOCATION: ${{ steps.msys2.outputs.msys2-location }}
+        run: |
+          # Andre added line
+          export PATH=/usr/bin/site_perl:$(cygpath "${MSYS2_LOCATION}/usr/bin/site_perl"):${PATH}
+          ${{ matrix.os.build_script }}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
