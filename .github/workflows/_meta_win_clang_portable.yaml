@@ -73,6 +73,7 @@ jobs:
     # po4a/update-po Translated man pages were not generated.
     # Tools for helping translation of documentation
     # https://www.po4a.org/
+    #
     defaults:
       run:
         shell: msys2 {0}
@@ -96,7 +97,6 @@ jobs:
             mingw-w64-clang-x86_64-SDL2_mixer
             mingw-w64-clang-x86_64-SDL2_pango
             mingw-w64-clang-x86_64-SDL2_sound
-            po4a
 
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 

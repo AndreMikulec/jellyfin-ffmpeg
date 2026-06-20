@@ -106,13 +106,24 @@ PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
     --enable-nvdec \
     --enable-nvenc
 
+
+# Andre added - require perl texinfo ( do not --disable-doc )
+# make doc -- To skip compilation of the massive binary files 
+#             and exclusively build the web docs, execute `make html` instead
+# HTML files (including the central index manual) will materialize inside 
+#   the doc/ subdirectory of your cloned Git folder.
+# Andre added
+make html
+ls -alrt -R ..
+if [ -d "${PREFIX}" ]; then ls -alrt -R ${PREFIX} ; fi
+
 make -j$(nproc) V=1
+
 # Andre added
 make install
-# Andre added - require perl texinfo ( do not --disable-doc )
-make html
+
 # Andre added 
-make install-doc
+# make install-doc
 
 
 # We have to manually match lines to get version as there will be no dpkg-parsechangelog on msys2
@@ -199,7 +210,10 @@ ls -alrt -R ${PREFIX}
 # # done
 
 # better
-cp -R ${PREFIX}/{bin,lib,include,shared,doc}                artifacts2
+cp                                    -R ${PREFIX}/{bin,lib,include}  artifacts2
+if [ -d "${PREFIX}/share" ]; then cp - R ${PREFIX}/share              artifacts2 ; fi
+if [ -d "${PREFIX}/doc" ];   then cp - R ${PREFIX}/doc                artifacts2 ; fi
+if [ -d "../doc" ];          then cp - R ../doc                       artifacts2 ; fi
 
 pushd                                                       artifacts2
 zip -9 -r "${ARTIFACTS_PATH2}/${OUTPUT_FNAME2}"             .
