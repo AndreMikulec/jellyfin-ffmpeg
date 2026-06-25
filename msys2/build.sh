@@ -48,6 +48,7 @@ PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
     --extra-ldflags=-L/clang64/ffbuild/lib \
     --prefix=/clang64/ffbuild/jellyfin-ffmpeg \
     --extra-version=Jellyfin \
+    --enable-shared \
     --disable-unstable \
     --disable-ffplay \
     --disable-debug \
@@ -110,6 +111,10 @@ while IFS= read -r line; do
         fi
     fi
 done < "$BUILDER_ROOT"/../debian/changelog
+
+echo "Begin Recursion"
+ls -alrt -R $(cygpath ${GITHUB_WORKSPACE})
+echo "End Recursion"
 
 PKG_NAME="jellyfin-ffmpeg_${PKG_VER}_portable_${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}"
 ARTIFACTS_PATH="$BUILDER_ROOT"/artifacts
