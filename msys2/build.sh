@@ -111,6 +111,10 @@ while IFS= read -r line; do
     fi
 done < "$BUILDER_ROOT"/../debian/changelog
 
+echo "Begin Recursion"
+ls -alrt -R $(cygpath ${GITHUB_WORKSPACE})
+echo "End Recursion"
+
 PKG_NAME="jellyfin-ffmpeg_${PKG_VER}_portable_${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}"
 ARTIFACTS_PATH="$BUILDER_ROOT"/artifacts
 OUTPUT_FNAME="${PKG_NAME}.zip"
