@@ -52,7 +52,7 @@ jobs:
             quilt
             diffstat
             ${{ matrix.os.nasm }}
-            mingw-w64-clang-aarch64-SDL2
+            mingw-w64-clang-x86_64-SDL2
 
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
