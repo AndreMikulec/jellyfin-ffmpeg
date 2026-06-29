@@ -49,7 +49,6 @@ PKG_CONFIG_PATH=/clang64/ffbuild/lib/pkgconfig ./configure \
     --prefix=/clang64/ffbuild/jellyfin-ffmpeg \
     --extra-version=Jellyfin \
     --disable-unstable \
-    --disable-debug \
     --disable-doc \
     --enable-lto=thin \
     --enable-gpl \
